@@ -7,18 +7,38 @@ package graph
 import (
 	"context"
 	"fmt"
+	"math/rand"
 
 	"github.com/Earl-Power/memrizr/graph/model"
 )
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+	// panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+	todo := &model.Todo{
+		Text:   input.Text,
+		ID:     fmt.Sprintf("T%d", rand.Int()),
+		User:   &model.User{ID: input.UserID, Name: "user " + input.UserID},
+		UserID: input.UserID,
+	}
+	r.todos = append(r.todos, todo)
+	return todo, nil
 }
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 	panic(fmt.Errorf("not implemented: Todos - todos"))
+}
+
+// Done is the resolver for the done field.
+func (r *todoResolver) Done(ctx context.Context, obj *model.Todo) (bool, error) {
+	panic(fmt.Errorf("not implemented: Done - done"))
+}
+
+// User is the resolver for the user field.
+func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, error) {
+	// panic(fmt.Errorf("not implemented: User - user"))
+	return &model.User{ID: obj.UserID, Name: "user " + obj.UserID}, nil
 }
 
 // Mutation returns MutationResolver implementation.
@@ -27,5 +47,9 @@ func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+// Todo returns TodoResolver implementation.
+func (r *Resolver) Todo() TodoResolver { return &todoResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type todoResolver struct{ *Resolver }

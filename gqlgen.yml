@@ -68,6 +68,7 @@ resolver:
 autobind:
   - "github.com/Earl-Power/memrizr/graph/model"
 
+omit_getters: true
 # This section declares type mapping between the GraphQL and go type systems
 #
 # The first line in each type will be used as defaults for resolver arguments and
